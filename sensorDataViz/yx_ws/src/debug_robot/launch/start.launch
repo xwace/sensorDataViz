@@ -1,0 +1,10 @@
+<launch>
+  <!-- <param name="use_sim_time" value="true" /> -->
+  <arg name="server_ip" default="10.10.35.228" />
+  <arg name="port" default="6558" />
+  <node pkg="tf" type="static_transform_publisher" name="base_tf" args="0.135 0 0 0 0 0 base_link laser 1000" />
+  <node pkg="debug_robot" type="debug_robot_node" name="yx_robot_debug" output="screen" >
+    <param name="server_ip" value="$(arg server_ip)" />
+    <param name="port" value="$(arg port)" />
+  </node>
+</launch>

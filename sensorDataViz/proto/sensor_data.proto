@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+// 激光雷达数据
+message LaserScan {
+  int32 angle_min = 1;         // 最小角度（假设为角度的整数值）
+  int32 angle_max = 2;         // 最大角度（假设为角度的整数值）
+  int32 angle_increment = 3;   // 每个激光束之间的角度增量（假设为角度的整数值）
+  int32 time_increment = 4;    // 每个激光束之间的时间增量
+  int32 scan_time = 5;         // 激光扫描的总时间
+  int32 range_min = 6;         // 激光雷达的最小测距（毫米）
+  int32 range_max = 7;         // 激光雷达的最大测距（毫米）
+  repeated int32 ranges = 8;   // 激光雷达测量的距离数据（毫米）
+  repeated int32 intensities = 9; // 激光强度数据（可选）
+}
+
+// 点云数据
+message YXPoint3D {
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+}
+
+message PointCloud {
+  repeated YXPoint3D points = 1;
+}
+
+// 里程计数据
+message Odometry {
+  message Pose {
+    message Position {
+      int32 x = 1;  // 位置 x（毫米）
+      int32 y = 2;  // 位置 y（毫米）
+      int32 z = 3;  // 位置 z（毫米）
+    }
+    message Orientation {
+      int32 x = 1;  // 方向四元数 x（整数值）
+      int32 y = 2;  // 方向四元数 y（整数值）
+      int32 z = 3;  // 方向四元数 z（整数值）
+      int32 w = 4;  // 方向四元数 w（整数值）
+    }
+
+    Position position = 1;     // 位置
+    Orientation orientation = 2; // 方向
+  }
+
+  message Twist {
+    message Linear {
+      int32 x = 1;  // 线速度 x（毫米/秒）
+      int32 y = 2;  // 线速度 y（毫米/秒）
+      int32 z = 3;  // 线速度 z（毫米/秒）
+    }
+    message Angular {
+      int32 x = 1;  // 角速度 x（单位：弧度/秒）
+      int32 y = 2;  // 角速度 y（单位：弧度/秒）
+      int32 z = 3;  // 角速度 z（单位：弧度/秒）
+    }
+
+    Linear linear = 1;     // 线速度
+    Angular angular = 2;   // 角速度
+  }
+
+  Pose pose = 1;      // 机器人姿态
+  Twist twist = 2;    // 机器人速度
+  int64 header_timestamp = 3;  // 时间戳，表示数据的时间（单位：毫秒）
+}
+
+// IMU
+message Imu {
+  message LinearAcceleration {
+    int32 x = 1;  // 线加速度 x（单位：米/秒^2）
+    int32 y = 2;  // 线加速度 y（单位：米/秒^2）
+    int32 z = 3;  // 线加速度 z（单位：米/秒^2）
+  }
+  message AngularVelocity {
+    int32 x = 1;  // 角速度 x（单位：弧度/秒）
+    int32 y = 2;  // 角速度 y（单位：弧度/秒）
+    int32 z = 3;  // 角速度 z（单位：弧度/秒）
+  }
+  message Orientation {
+    int32 x = 1;
+    int32 y = 2;
+    int32 z = 3;
+    int32 w = 4;
+  }
+  LinearAcceleration linear_acceleration = 1;  // 线加速度
+  AngularVelocity angular_velocity = 2;        // 角速度
+  Orientation orientation = 3;                 // 方向
+  int64 header_timestamp = 4;                  // 时间戳，表示数据的时间（单位：毫秒）
+}
+
+// 数据消息
+message SensorData {
+  // LaserScan raw_laser_scan = 1;    // 原始激光雷达数据
+  // LaserScan laser_scan_360 = 2;    // 转换为360束的激光雷达数据
+  PointCloud raw_laser_scan = 1;    // 原始激光雷达数据
+  PointCloud laser_scan_360 = 2;    // 转换为360束的激光雷达数据
+  PointCloud raw_point_cloud = 3; // 点云数据
+  PointCloud obs_point_cloud = 4; // 障碍物点云数据
+  Odometry odometry = 5;       // 里程计数据
+  int64 secs = 6;         // 数据时间戳（UNIX 时间戳，秒部分）
+  int64 nsecs = 7;        // 数据时间戳（纳秒部分）
+}
