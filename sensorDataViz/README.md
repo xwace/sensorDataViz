@@ -31,7 +31,3 @@ Connected to server. Start receiving data..
 ```shell
 rviz -d robotlbp/src/ros_debug/yx_ws/src/debug_robot/rviz/nav.rviz
 ```
-
-
----
-另：如有疑问，请企业微信@徐保来(Ryan)
